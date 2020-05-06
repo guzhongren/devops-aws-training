@@ -11,7 +11,7 @@ services:
   backend:
     image: guzhongren/cms-backend
     ports:
-      - "1234:1234"
+      - "12345:1234"
     links:
       - db
     depends_on:
@@ -19,10 +19,11 @@ services:
   db:
     image: postgres
     environment:
-      POSTGRES_PASSWORD: '000000'
       POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: '000000'
+      POSTGRES_HOST_AUTH_METHOD: trust
     ports:
-      - 2345:5432
+      - 54321:5432
     volumes:
       - "./data:/var/lib/postgresql/data"
     depends_on:
