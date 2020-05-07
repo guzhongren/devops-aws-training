@@ -4,10 +4,16 @@
 
 ![Design](./cms-devops-adr.jpg)
 
+
+## Codebase
+
+* [https://github.com/guzhongren/CMS-backend](https://github.com/guzhongren/CMS-backend)
+* [https://github.com/guzhongren/CMS-backend](https://github.com/guzhongren/CMS-backend)
+
 ## Start
 
 ```shell
-docker-compose up cms
+docker-compose up
 ```
 
 ## Browser
