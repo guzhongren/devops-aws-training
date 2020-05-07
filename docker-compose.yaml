@@ -3,11 +3,14 @@ services:
   cms:
     image: guzhongren/cms:latest
     ports:
-      - "8090:8091"
+      - "8091:80"
     links:
       - backend
     depends_on:
       - backend
+    networks:
+     - backend-network
+     - frontend-network
   backend:
     image: guzhongren/cms-backend
     ports:
@@ -16,6 +19,8 @@ services:
       - db
     depends_on:
       - db
+    networks:
+     - backend-network
   db:
     image: postgres
     environment:
@@ -28,6 +33,8 @@ services:
       - "./data:/var/lib/postgresql/data"
     depends_on:
     - pgadmin
+    networks:
+     - backend-network
   pgadmin:
     image: dpage/pgadmin4
     environment:
@@ -35,3 +42,8 @@ services:
       PGADMIN_DEFAULT_PASSWORD: '000000'
     ports:
       - 9099:80
+    networks:
+     - backend-network
+networks:
+  frontend-network:
+  backend-network:
