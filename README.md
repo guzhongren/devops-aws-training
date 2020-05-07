@@ -2,7 +2,7 @@
 
 ## Design
 
-![Design](./cms-devops-adr.png)
+![Design](./cms-devops-adr.jpg)
 
 ## Start
 
