@@ -1,5 +1,9 @@
 # DevOps for CMS
 
+## Design
+
+![Design](./cms-devops-adr.png)
+
 ## Start
 
 ```shell
