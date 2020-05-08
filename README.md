@@ -7,7 +7,7 @@
 
 ## Codebase
 
-* [https://github.com/guzhongren/CMS-backend](https://github.com/guzhongren/CMS-backend)
+* [https://github.com/guzhongren/CMS](https://github.com/guzhongren/CMS)
 * [https://github.com/guzhongren/CMS-backend](https://github.com/guzhongren/CMS-backend)
 
 ## Start
@@ -18,7 +18,7 @@ docker-compose up
 
 ## Browser
 
-[http://127.0.0.1:8091](http://127.0.0.1:8091)
+[http://127.0.0.1](http://127.0.0.1)
 
 ## Login
 
