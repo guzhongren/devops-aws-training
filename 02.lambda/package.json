@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "zip": "zip -r ../guzhongren-lambda-zip.zip .",
-    "upload": "aws lambda update-function-code --function-name my-function --zip-file fileb://function.zip"
+    "zip": "zip -r ../guzhongren-lambda-zip.zip ."
   },
   "keywords": [],
   "author": "",
