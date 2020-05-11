@@ -1,0 +1,17 @@
+{
+  "name": "02.lambda",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "zip": "zip -r ../guzhongren-lambda-zip.zip .",
+    "upload": "aws lambda update-function-code --function-name my-function --zip-file fileb://function.zip"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.673.0"
+  }
+}
