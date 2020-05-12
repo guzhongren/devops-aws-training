@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "zip": "zip -r ../guzhongren-lambda-zip.zip ."
+    "zip": "zip -r ../guzhongren-lambda-zip.zip .",
+    "cloudFormation": "aws cloudformation package --template-file ./guzhongren-lambda-cloudformation-source.yaml --s3-bucket guzhongren-s3-bucket --output-template-file guzhongren-lambda-cloudformation.yaml",
+    "deployCloudFormation": "aws cloudformation deploy --template-file ./guzhongren-lambda-cloudformation.yaml --stack-name guzhongren-lambda-cloudformation"
   },
   "keywords": [],
   "author": "",
