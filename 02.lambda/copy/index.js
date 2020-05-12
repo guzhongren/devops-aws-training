@@ -1,9 +1,8 @@
 const AWS = require('aws-sdk');
 
-const s3 = new AWS.S3();
+const s3 = new AWS.S3({apiVersion: '2006-03-01'});;
 
 exports.handler = async (event) => {
-
   var params = {
     Bucket: "guzhongren-s3-bucket",
     CopySource: "zhangyu-lambda-test/function.zip",
