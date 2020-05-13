@@ -1,0 +1,16 @@
+{
+  "name": "create",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "zip": "zip -r ./guzhongren-lambda-zip-cli.zip ./index.js",
+    "createLambda": "aws lambda create-function --function-name guzhongren-lambda-zip-cli --zip-file fileb://./guzhongren-lambda-zip-cli.zip --handler index.handler --runtime nodejs12.x --role arn:aws:iam::494526681395:role/for-aws-training-2",
+    "auto": "yarn zip & yarn createLambda",
+    "invoke": "aws lambda invoke --cli-binary-format raw-in-base64-out --function-name guzhongren-lambda-zip-cli response.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
