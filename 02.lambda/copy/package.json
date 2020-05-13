@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "zip": "zip -r ../guzhongren-s3-copy.zip .",
-    "dev": "node index.js"
+    "upload": "aws s3 cp ../guzhongren-s3-copy.zip s3://guzhongren-s3-bucket/guzhongren-s3-copy.zip",
+    "dev": "node index.js",
+    "auto": "yarn zip & yarn upload"
 
   },
   "keywords": [],
