@@ -32,22 +32,8 @@ exports.handler = async function (event) {
     "Key": "guzhongren-s3-copy.zip",
     "CopySource": "guzhongren-s3-bucket/guzhongren-s3-copy.zip",
   }
-  const request = s3.copyObject(params, function (err, data) {
+   await s3.copyObject(params, function (err, data) {
     if (err) console.log(err, err.stack);
     else console.log(data);
-  })
-  request.on('success', function(response) {
-    console.log("Success!")
-    return response
-  }).
-  on('error', function(error, response) {
-    console.log("Error!")
-    return error
-  }).
-  on('complete', function(response) {
-    console.log("Always!");
-    return response
-  })
-  .send()
-  console.log('finish')
+  }).promise()
 }
