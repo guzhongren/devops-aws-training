@@ -1,0 +1,13 @@
+Resources: 
+  EventInvokeConfig:
+    Type: AWS::Lambda::EventInvokeConfig
+    Properties:
+        FunctionName: ""
+        Qualifier: "$LATEST"
+        MaximumEventAgeInSeconds: 600
+        MaximumRetryAttempts: 0
+        DestinationConfig:
+            OnSuccess:
+                Destination: "arn:aws:iam::494526681395:role/for-aws-training-2:YourSNSTopicOnSuccess"
+            OnFailure:
+                Destination: "arn:aws:iam::494526681395:role/for-aws-training-2:function:YourLambdaFunctionOnFailure"

@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "zip": "zip -r ../guzhongren-lambda-zip.zip ./index.js",
     "zipFunction": "zip -r ../guzhongren-function.zip ./index.js",
-    "createLambda": "aws lambda create-function --function-name my-function --zip-file fileb:///Users/c4/Desktop/ThoughtWorks/02.Project/devops-aws-training/guzhongren-function.zip --handler index.handler --runtime nodejs12.x --role arn:aws:iam::494526681395:role/for-aws-training-2",
-    "invokeLambda": "aws lambda invoke --cli-binary-format raw-in-base64-out --function-name my-function response.json",
+    "createLambda": "aws lambda create-function --function-name guzhongren-function --zip-file fileb:///Users/c4/Desktop/ThoughtWorks/02.Project/devops-aws-training/guzhongren-function.zip --handler index.handler --runtime nodejs12.x --role arn:aws:iam::494526681395:role/for-aws-training-2",
+    "invokeLambda": "aws lambda invoke --cli-binary-format raw-in-base64-out --function-name guzhongren-function response.json",
     "cloudFormation": "aws cloudformation package --template-file ./guzhongren-lambda-cloudformation-source.yaml --s3-bucket guzhongren-s3-bucket --output-template-file guzhongren-lambda-cloudformation.yaml",
     "deployCloudFormation": "aws cloudformation deploy --template-file ./guzhongren-lambda-cloudformation.yaml --stack-name guzhongren-lambda-cloudformation",
     "auto": "yarn zip & yarn cloudFormation & yarn deployCloudFormation"
