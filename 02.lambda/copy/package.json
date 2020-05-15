@@ -7,6 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "zip": "zip -r ../guzhongren-s3-copy.zip .",
     "upload": "aws s3 cp ../guzhongren-s3-copy.zip s3://guzhongren-s3-bucket/guzhongren-s3-copy.zip",
+    "createLambda": "aws lambda create-function --function-name guzhongren-s3-copy --zip-file fileb://../guzhongren-s3-copy.zip --handler index.handler --runtime nodejs12.x --role arn:aws:iam::494526681395:role/for-aws-training-2",
+    "updateLambda":"aws lambda update-function-code --function-name guzhongren-s3-copy --zip-file fileb://../guzhongren-s3-copy.zip",
+    "invoke": "aws lambda invoke --cli-binary-format raw-in-base64-out --function-name guzhongren-s3-copy response.json",
     "dev": "node index.js",
     "auto": "yarn zip & yarn upload"
 
