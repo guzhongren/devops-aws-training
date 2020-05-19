@@ -11,7 +11,7 @@
     "updateLambda":"aws lambda update-function-code --function-name guzhongren-s3-copy --zip-file fileb://../guzhongren-s3-copy.zip",
     "invoke": "aws lambda invoke --cli-binary-format raw-in-base64-out --function-name guzhongren-s3-copy response.json",
     "dev": "node index.js",
-    "auto": "yarn zip & yarn upload"
+    "auto": "yarn zip & yarn upload & yarn createLambda & yarn updateLambda"
 
   },
   "keywords": [],

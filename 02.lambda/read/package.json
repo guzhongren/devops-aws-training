@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "zip": "zip -r ../guzhongren-lambda-s3-read ."
+    "zip": "zip -r ../guzhongren-lambda-s3-read .",
+    "createLambda": "aws lambda create-function --function-name guzhongren-lambda-s3-read --zip-file fileb:///Users/c4/Desktop/ThoughtWorks/02.Project/devops-aws-training/02.lambda/guzhongren-lambda-s3-read.zip --handler index.handler --runtime nodejs12.x --role arn:aws:iam::494526681395:role/for-aws-training-2",
+    "auto": "yarn zip & yarn createLambda"
   },
   "keywords": [],
   "author": "",

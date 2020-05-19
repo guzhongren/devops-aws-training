@@ -22,7 +22,7 @@ exports.handler = async function (event) {
     "CopySource": `${s3Event.bucket.name}/${s3Event.object.key}`,
   }
   console.log(JSON.stringify(params))
-  const request = s3.copyObject(params, function (err, data) {
+  await s3.copyObject(params, function (err, data) {
     if (err) console.log(err, err.stack)
     else console.log(data)
   }).promise()
