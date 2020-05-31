@@ -1,0 +1,17 @@
+{
+  "projectName": {
+    "S": "id_5"
+  },
+  "projectType": {
+    "S": "projectType5"
+  },
+  "memberName": {
+    "S": "memberName5"
+  },
+  "startDate": {
+    "N": "1234324754"
+  },
+  "Others": {
+    "S":  "test"
+  }
+}
