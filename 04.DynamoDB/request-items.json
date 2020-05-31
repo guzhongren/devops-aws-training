@@ -6,7 +6,15 @@
                     "projectName":{"S": "id_1"},
                     "projectType": {"S": "projectType1"},
                     "memberName": {"S": "memberName1"},
-                    "startDate": {"N": "123432424"}
+                    "startDate": {"N": "123432424"},
+                    "Others": {
+                      "M": {
+                        "test": {
+                          "SS": [
+                            "SS","sss"
+                          ]}
+                      }
+                    }
                 }
             }
         },
