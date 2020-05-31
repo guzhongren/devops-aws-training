@@ -1,0 +1,18 @@
+[
+  {
+    "IndexName": "projectName",
+    "KeySchema": [
+      {
+        "AttributeName": "projectName",
+        "KeyType": "HASH"
+      }
+    ],
+    "Projection": {
+      "ProjectionType": "ALL"
+    },
+    "ProvisionedThroughput": {
+      "ReadCapacityUnits": 5,
+      "WriteCapacityUnits": 5
+    }
+  }
+]
