@@ -7,7 +7,7 @@ source ./varibles.sh
 
 aws dynamodb put-item \
     --table-name $TABLE_NAME \
-    --item '{"projectName": {"S": "Learn 1"}, "projectType": {"S": "Study1"}}' \
+    --item '{"projectName": {"S": "Learn 1"}, "projectType": {"S": "Study1"}, "sortOf": {"S": "sort"}}' \
     --return-consumed-capacity TOTAL
 
 
