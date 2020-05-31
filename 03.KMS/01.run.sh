@@ -9,7 +9,7 @@ KEY=$(aws kms create-key \
 # 2. encrypt
 aws kms encrypt \
     --key-id "$KEY"\
-    --plaintext fileb://./password.md \
+    --plaintext fileb://./password.json \
     --output text \
     --query CiphertextBlob | base64 \
     --decode > EncryptedFile
@@ -18,4 +18,4 @@ aws kms encrypt \
 aws kms decrypt \
     --ciphertext-blob fileb://EncryptedFile \
     --output text \
-    --query Plaintext | base64 --decode > ExamplePlaintextFile
+    --query Plaintext | base64 --decode > ExamplePlaintextFile.json
