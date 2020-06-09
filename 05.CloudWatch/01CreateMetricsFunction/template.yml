@@ -28,9 +28,9 @@ Resources:
   ScheduledRuleResource:
     Type: AWS::Events::Rule
     Properties:
-      ScheduleExpression: "rate(1 day)"
+      # ScheduleExpression: "rate(1 day)"
 #      //todo set long time schedule to prevent send email
-      # ScheduleExpression: "rate(1 minute)"
+      ScheduleExpression: "rate(1 minute)"
       State: "ENABLED"
       Targets:
         - Arn:
@@ -70,7 +70,7 @@ Resources:
           Value: "URLS"
       MetricName: "PAGES_VISITED"
       Namespace: "SITE/TRAFFIC"
-      Threshold: 5
+      Threshold: 1
 #      todo: set 10000 to prevent send email
       # Threshold: 100000
 

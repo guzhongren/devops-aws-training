@@ -36,10 +36,10 @@ Resources:
         Fn::GetAtt:
         - ScheduledRuleResource
         - Arn
-  EmailSNSTopicName:
+  EmailSNSTopicResource:
     Type: AWS::SNS::Topic
     Properties:
-      TopicName: EmailSNSTopicName
+      TopicName: EmailSNSTopicResource
       Subscription:
       - Protocol: email
         Endpoint: zhongren.gu@thoughtworks.com
@@ -55,12 +55,12 @@ Resources:
         Value: URLS
       MetricName: PAGES_VISITED
       Namespace: SITE/TRAFFIC
-      Threshold: 5
+      Threshold: 1
       Period: 60
       Statistic: Average
       TreatMissingData: breaching
       AlarmActions:
-      - Ref: EmailSNSTopicName
+      - Ref: EmailSNSTopicResource
 Outputs:
   CreateMetricsFunction:
     Description: Hello World Lambda Function ARN
