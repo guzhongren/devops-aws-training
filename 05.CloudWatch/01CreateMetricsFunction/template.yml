@@ -1,0 +1,90 @@
+# This is the SAM template that represents the architecture of your serverless application
+# https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-template-basics.html
+
+# The AWSTemplateFormatVersion identifies the capabilities of the template
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/format-version-structure.html
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  helloworld
+
+# Transform section specifies one or more macros that AWS CloudFormation uses to process your template
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-section-structure.html
+Transform:
+- AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Timeout: 20
+
+Resources:
+  CreateMetricsFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: helloworld
+      Handler: src/handlers/scheduled-event-logger.scheduledEventLoggerHandler
+      Runtime: nodejs12.x
+      MemorySize: 512
+      Role: arn:aws:iam::494526681395:role/for-aws-training-2
+  ScheduledRuleResource:
+    Type: AWS::Events::Rule
+    Properties:
+      # ScheduleExpression: "rate(1 day)"
+#      //todo set long time schedule to prevent send email
+      ScheduleExpression: "rate(1 minute)"
+      State: "ENABLED"
+      Targets:
+        - Arn:
+            Fn::GetAtt:
+              - "CreateMetricsFunction"
+              - "Arn"
+          Id: "TargetFunctionV1"
+  PermissionForEventsToInvokeLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Ref: "CreateMetricsFunction"
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn:
+        Fn::GetAtt:
+          - "ScheduledRuleResource"
+          - "Arn"
+  EmailSNSTopicResource:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: "EmailSNSTopicResource"
+      Subscription:
+        - Protocol: email
+          Endpoint: zhongren.gu@thoughtworks.com
+
+  PageVisitedAlarmResource:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: page visited invocations
+      AlarmName: PageVisitedAlarmResource
+
+      ComparisonOperator: GreaterThanThreshold
+      EvaluationPeriods: 1
+      Dimensions:
+        - Name: "UNIQUE_PAGES"
+          Value: "URLS"
+      MetricName: "PAGES_VISITED"
+      Namespace: "SITE/TRAFFIC"
+      Threshold: 5
+#      todo: set 10000 to prevent send email
+      # Threshold: 100000
+
+      Period: 60
+      Statistic: Average
+      TreatMissingData: breaching
+      AlarmActions:
+        - !Ref EmailSNSTopicResource
+
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  CreateMetricsFunction:
+    Description: "Hello World Lambda Function ARN"
+    Value: !GetAtt CreateMetricsFunction.Arn

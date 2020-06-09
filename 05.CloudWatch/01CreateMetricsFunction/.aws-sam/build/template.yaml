@@ -1,0 +1,70 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: helloworld
+Transform:
+- AWS::Serverless-2016-10-31
+Globals:
+  Function:
+    Timeout: 20
+Resources:
+  CreateMetricsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: CreateMetricsFunction
+      Handler: src/handlers/scheduled-event-logger.scheduledEventLoggerHandler
+      Runtime: nodejs12.x
+      MemorySize: 512
+      Role: arn:aws:iam::494526681395:role/for-aws-training-2
+  ScheduledRuleResource:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: rate(1 minute)
+      State: ENABLED
+      Targets:
+      - Arn:
+          Fn::GetAtt:
+          - CreateMetricsFunction
+          - Arn
+        Id: TargetFunctionV1
+  PermissionForEventsToInvokeLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Ref: CreateMetricsFunction
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn:
+        Fn::GetAtt:
+        - ScheduledRuleResource
+        - Arn
+  EmailSNSTopicName:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: EmailSNSTopicName
+      Subscription:
+      - Protocol: email
+        Endpoint: zhongren.gu@thoughtworks.com
+  PageVisitedAlarmResource:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: page visited invocations
+      AlarmName: PageVisitedAlarmResource
+      ComparisonOperator: GreaterThanThreshold
+      EvaluationPeriods: 1
+      Dimensions:
+      - Name: UNIQUE_PAGES
+        Value: URLS
+      MetricName: PAGES_VISITED
+      Namespace: SITE/TRAFFIC
+      Threshold: 5
+      Period: 60
+      Statistic: Average
+      TreatMissingData: breaching
+      AlarmActions:
+      - Ref: EmailSNSTopicName
+Outputs:
+  CreateMetricsFunction:
+    Description: Hello World Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - CreateMetricsFunction
+      - Arn
