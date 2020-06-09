@@ -4,7 +4,6 @@ AWS.config.update({region: 'ap-southeast-1'});
 var cw = new AWS.CloudWatch({apiVersion: '2010-08-01'});
 
 exports.scheduledEventLoggerHandler = async (event, context) => {
-  const value = Math.random() * 10
   var params = {
     MetricData: [
       {
@@ -16,18 +15,18 @@ exports.scheduledEventLoggerHandler = async (event, context) => {
           },
         ],
         Unit: 'None',
-        Value: value,
+        Value: Math.random() * 10,
       },
     ],
     Namespace: 'SITE/TRAFFIC'
   };
   
-  cw.putMetricData(params, function(err, data) {
+  await cw.putMetricData(params, function(err, data) {
     if (err) {
       console.log("Error", err);
     } else {
-      console.log("输出信息： ", value);
       console.log("Success", JSON.stringify(data));
     }
   });
+  return params;
 }
