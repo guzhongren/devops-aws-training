@@ -1,14 +1,7 @@
-# This is the SAM template that represents the architecture of your serverless application
-# https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-template-basics.html
 
-# The AWSTemplateFormatVersion identifies the capabilities of the template
-# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/format-version-structure.html
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
   helloworld
-
-# Transform section specifies one or more macros that AWS CloudFormation uses to process your template
-# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-section-structure.html
 Transform:
 - AWS::Serverless-2016-10-31
 
@@ -17,15 +10,16 @@ Globals:
     Timeout: 20
 
 Resources:
-  helloworld:
+  LogCreateMetricsFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: helloworld
+      FunctionName: LogCreateMetricsFunction
       Handler: src/handlers/scheduled-event-logger.scheduledEventLoggerHandler
       Runtime: nodejs12.x
       MemorySize: 512
       Role: arn:aws:iam::494526681395:role/for-aws-training-2
-  ScheduledRuleResource:
+  ScheduledRuleLogResource:
     Type: AWS::Events::Rule
     Properties:
       # ScheduleExpression: "rate(1 day)"
@@ -35,64 +29,52 @@ Resources:
       Targets:
         - Arn:
             Fn::GetAtt:
-              - "helloworld"
+              - "LogCreateMetricsFunction"
               - "Arn"
           Id: "TargetFunctionV1"
-  PermissionForEventsToInvokeLambda:
+  PermissionForEventsToInvokeLogLambda:
     Type: AWS::Lambda::Permission
     Properties:
       FunctionName:
-        Ref: "helloworld"
+        Ref: "LogCreateMetricsFunction"
       Action: "lambda:InvokeFunction"
       Principal: "events.amazonaws.com"
       SourceArn:
         Fn::GetAtt:
-          - "ScheduledRuleResource"
+          - "ScheduledRuleLogResource"
           - "Arn"
-  EmailSNSTopicResource:
+  EmailSNSTopicLogResource:
     Type: AWS::SNS::Topic
     Properties:
-      TopicName: "EmailSNSTopicResource"
+      TopicName: "EmailSNSTopicLogResource"
       Subscription:
         - Protocol: email
           Endpoint: zhongren.gu@thoughtworks.com
-
-  PageVisitedAlarmResource:
+  LogMetricFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      LogGroupName: "/aws/lambda/LogCreateMetricsFunction"
+      FilterPattern: "[Value]"
+      MetricTransformations:
+        - MetricValue: "1"
+          MetricNamespace: "SITE/TRAFFIC"
+          MetricName: "PAGES_VISITED"
+    DependsOn: LogCreateMetricsFunction
+  LogAlarmResource:
     Type: AWS::CloudWatch::Alarm
     Properties:
-      AlarmDescription: page visited invocations
-      AlarmName: PageVisitedAlarmResource
-
+      AlarmDescription: times 5 account
+      AlarmName: LogAlarmResource
       ComparisonOperator: GreaterThanThreshold
       EvaluationPeriods: 1
-      Dimensions:
-        - Name: "UNIQUE_PAGES"
-          Value: "URLS"
-      MetricName: "PAGES_VISITED"
+      MetricName: "times5Count"
       Namespace: "SITE/TRAFFIC"
       Threshold: 1
 #      todo: set 10000 to prevent send email
-      # Threshold: 100000
+#      Threshold: 10000
       Period: 60
       Statistic: Average
       TreatMissingData: breaching
       AlarmActions:
-        - !Ref EmailSNSTopicResource
-  LogMetricFilter:
-    Type: AWS::Logs::MetricFilter
-    Properties:
-      LogGroupName: "/aws/lambda/helloworld"
-      FilterPattern: "[name, times = 0]"
-      MetricTransformations:
-        - MetricValue: "1"
-          MetricNamespace: "guzhongren/logs"
-          MetricName: "times5Count"
-    DependsOn: helloworld
-
-Outputs:
-  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
-  # Find out more about other implicit resources you can reference within SAM
-  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  helloworld:
-    Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt helloworld.Arn
+        - !Ref EmailSNSTopicLogResource
+    DependsOn: EmailSNSTopicLogResource

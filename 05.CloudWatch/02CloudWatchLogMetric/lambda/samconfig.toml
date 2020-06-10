@@ -2,9 +2,9 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "cloud-watch-create-metrics-log-guzhongren"
+stack_name = "cloud-watch-create-metrics-log-lambda-guzhongren"
 s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-1a1b4wsic34ky"
-s3_prefix = "cloud-watch-create-metrics-log-guzhongren"
+s3_prefix = "cloud-watch-create-metrics-log-lambda-guzhongren"
 region = "ap-southeast-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
