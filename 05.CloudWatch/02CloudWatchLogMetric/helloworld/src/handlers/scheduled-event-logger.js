@@ -15,7 +15,7 @@ exports.scheduledEventLoggerHandler = async (event, context) => {
           },
         ],
         Unit: 'None',
-        Value: Math.random() * 10,
+        Value: Math.floor(Math.random() * 10),
       },
     ],
     Namespace: 'SITE/TRAFFIC'

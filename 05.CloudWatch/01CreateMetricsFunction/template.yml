@@ -17,7 +17,7 @@ Globals:
     Timeout: 20
 
 Resources:
-  helloworld:
+  CreateMetricsFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: helloworld
@@ -30,19 +30,19 @@ Resources:
     Properties:
       # ScheduleExpression: "rate(1 day)"
 #      //todo set long time schedule to prevent send email
-      ScheduleExpression: "rate(1 minute)"
+      ScheduleExpression: "rate(5 minute)"
       State: "ENABLED"
       Targets:
         - Arn:
             Fn::GetAtt:
-              - "helloworld"
+              - "CreateMetricsFunction"
               - "Arn"
           Id: "TargetFunctionV1"
   PermissionForEventsToInvokeLambda:
     Type: AWS::Lambda::Permission
     Properties:
       FunctionName:
-        Ref: "helloworld"
+        Ref: "CreateMetricsFunction"
       Action: "lambda:InvokeFunction"
       Principal: "events.amazonaws.com"
       SourceArn:
@@ -70,29 +70,21 @@ Resources:
           Value: "URLS"
       MetricName: "PAGES_VISITED"
       Namespace: "SITE/TRAFFIC"
-      Threshold: 1
+      Threshold: 5
 #      todo: set 10000 to prevent send email
       # Threshold: 100000
+
       Period: 60
       Statistic: Average
       TreatMissingData: breaching
       AlarmActions:
         - !Ref EmailSNSTopicResource
-  LogMetricFilter:
-    Type: AWS::Logs::MetricFilter
-    Properties:
-      LogGroupName: "/aws/lambda/helloworld"
-      FilterPattern: "[name, times = 0]"
-      MetricTransformations:
-        - MetricValue: "1"
-          MetricNamespace: "guzhongren/logs"
-          MetricName: "times5Count"
-    DependsOn: helloworld
+
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  helloworld:
+  CreateMetricsFunction:
     Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt helloworld.Arn
+    Value: !GetAtt CreateMetricsFunction.Arn
