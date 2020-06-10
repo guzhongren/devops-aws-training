@@ -15,12 +15,12 @@ exports.scheduledEventLoggerHandler = async (event, context) => {
           },
         ],
         Unit: 'None',
-        Value: Math.random() * 10,
+        Value: Math.floor(Math.random() * 10),
       },
     ],
     Namespace: 'SITE/TRAFFIC'
   };
-  
+  console.log(JSON.stringify(params));
   await cw.putMetricData(params, function(err, data) {
     if (err) {
       console.log("Error", err);

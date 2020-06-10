@@ -20,7 +20,7 @@ exports.scheduledEventLoggerHandler = async (event, context) => {
     ],
     Namespace: 'SITE/TRAFFIC'
   };
-  
+  console.log(JSON.stringify(params));
   await cw.putMetricData(params, function(err, data) {
     if (err) {
       console.log("Error", err);

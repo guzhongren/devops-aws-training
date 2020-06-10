@@ -55,7 +55,7 @@ Resources:
         Value: URLS
       MetricName: PAGES_VISITED
       Namespace: SITE/TRAFFIC
-      Threshold: 1
+      Threshold: 2
       Period: 60
       Statistic: Average
       TreatMissingData: breaching
