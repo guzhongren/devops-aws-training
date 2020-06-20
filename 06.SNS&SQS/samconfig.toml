@@ -1,0 +1,11 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "cloud-watch-log-evetn-guzhongren"
+s3_bucket = "aws-s3-guzhongren"
+s3_prefix = "cloud-watch-log-evetn-guzhongren"
+region = "ap-southeast-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+

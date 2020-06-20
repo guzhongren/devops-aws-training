@@ -51,3 +51,9 @@ https://docs.aws.amazon.com/cli/latest/reference/cloudformation/index.html
 https://aws.amazon.com/sns/faqs/
 https://aws.amazon.com/sqs/faqs/
 
+
+sam build
+sam deploy
+
+
+aws cloudformation delete-stack --stack-name cloud-watch-log-evetn-guzhongren

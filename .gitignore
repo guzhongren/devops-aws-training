@@ -1,4 +1,2 @@
-05.CloudWatch/01CreateMetricsFunction/helloworld/node_modules
-05.CloudWatch/01CreateMetricsFunction/.aws-sam/build/CreateMetricsFunction/node_modules
-05.CloudWatch/02CloudWatchLogMetric/.aws-sam/build/LogCreateMetricsFunction/node_modules
-05.CloudWatch/02CloudWatchLogMetric/lambda/.aws-sam/build/LogCreateMetricsFunction/node_modules
+node_modules
+.aws-sam

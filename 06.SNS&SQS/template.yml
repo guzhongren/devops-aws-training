@@ -1,0 +1,119 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: helloworld
+
+Transform:
+- AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Timeout: 20
+
+Resources:
+  LogEventFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: logEvent
+      FunctionName: logEventFunction-guzhongren
+      Handler: src/handlers/logEvent.handler
+      Runtime: nodejs12.x
+      MemorySize: 512
+      Role: arn:aws:iam::494526681395:role/for-aws-training-2
+  ScheduledRuleResource:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "rate(5 minutes)"
+      State: "ENABLED"
+      Targets:
+        - Arn: !Ref SNSTopicResource
+          Id: "TargetSns"
+  DeadLetterQueue:
+    Type: AWS::SQS::Queue
+  MessageQueueResource:
+    Type: AWS::SQS::Queue
+    DependsOn: DeadLetterQueue
+    Properties:
+      MessageRetentionPeriod: 604800
+      VisibilityTimeout: 300
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt DeadLetterQueue.Arn
+        maxReceiveCount: 5
+      Tags:
+        - Key: "from"
+          Value: "SQS"
+        - Key: "to"
+          Value: "guzhongren"
+
+  PermissionForEventsToInvokeLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Ref: "LogEventFunction"
+      Action: "lambda:InvokeFunction"
+      Principal: sqs.amazonaws.com
+      SourceArn: !GetAtt MessageQueueResource.Arn
+  SNSTopicResource:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: "guzhongren-SNSTopicResource"
+  EmailSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint: guzhongren@live.cn
+      Protocol: email
+      TopicArn: !Ref SNSTopicResource
+  SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref SNSTopicResource
+      Endpoint: !GetAtt MessageQueueResource.Arn
+      Protocol: sqs
+
+  LambdaSQSMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      BatchSize: 10
+      Enabled: true
+      EventSourceArn: !GetAtt MessageQueueResource.Arn
+      FunctionName: !GetAtt LogEventFunction.Arn
+  SNSTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      Topics:
+        - !Ref SNSTopicResource
+      PolicyDocument:
+        Id: guzhopngren-TopicPolicy
+        Version: '2012-10-17'
+        Statement:
+          - Sid: allow-cloudwatch-rule-public
+            Effect: Allow
+            Principal: '*'
+            Action:
+              - sns:Subscribe
+              - sns:Publish
+            Resource: !Ref SNSTopicResource
+  SQSPolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref MessageQueueResource
+      PolicyDocument:
+        Statement:
+          - Sid: allow-send-message
+            Effect: Allow
+            Principal:
+              AWS: "*"
+            Action:
+              - SQS:SendMessage
+            Resource: !Ref MessageQueueResource
+          - Sid: Allow-receive-SendMessage
+            Effect: Allow
+            Principal:
+              AWS: "*"
+            Action:
+              - sqs:ReceiveMessage
+            Resource: !GetAtt LogEventFunction.Arn
+
+Outputs:
+  LogEventFunction:
+    Description: "Hello World Lambda Function ARN"
+    Value: !GetAtt LogEventFunction.Arn
