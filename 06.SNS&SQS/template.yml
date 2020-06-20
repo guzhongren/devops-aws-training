@@ -21,7 +21,8 @@ Resources:
   ScheduledRuleResource:
     Type: AWS::Events::Rule
     Properties:
-      ScheduleExpression: "rate(5 minutes)"
+      # TODO: update to ScheduleExpression: "rate(5 minutes)"
+      ScheduleExpression: "rate(120 minutes)"
       State: "ENABLED"
       Targets:
         - Arn: !Ref SNSTopicResource
